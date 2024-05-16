@@ -5,7 +5,7 @@ miniwdl run somalier.wdl -v -d work -i input.json --cfg miniwdl.cfg
 
 Input  
 Add in GRCh38 reference for Somalier.reference  
-pedigree is a pedigree of the samples to use for relationship checking
+pedigree is a pedigree of the samples to use for relationship checking  
 omeList is a list of omes to process  
 - ome_name is name of ome to organize by
 - toExtractList is a tsv with columns [ID, path to BAM, path to index]. This file represents files that have not yet been extracted.
