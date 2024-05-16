@@ -1,0 +1,12 @@
+{
+    "Somalier.sites":"/oak/stanford/groups/smontgom/jonnguye/repos/WDL-Somalier/ref/sites.hg38.vcf.gz",
+    "Somalier.reference":"/oak/stanford/groups/smontgom/shared/genomes/GRCh38/GRCh38_full_analysis_set_plus_decoy_hla.fa",
+    "Somalier.omeList": [
+        {
+            "ome_name":"Test",
+            "toExtractList":"/oak/stanford/groups/smontgom/jonnguye/repos/WDL-Somalier/test_data/short_bam_files.tsv",
+            "extractedList":"/oak/stanford/groups/smontgom/jonnguye/repos/WDL-Somalier/test_data/extractList.txt"
+        },
+    ],
+    "Somalier.pedigree":"/oak/stanford/groups/smontgom/jonnguye/repos/WDL-Somalier/test_data/sample.ped"
+}
