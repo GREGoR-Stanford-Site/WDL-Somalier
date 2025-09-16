@@ -30,3 +30,9 @@ See [input.json](input.json) and [test_data/input.json](test_data/input.json) fo
    ```sh
    miniwdl run somalier.wdl -v -d work -i input.json --cfg miniwdl.cfg
 
+## Dependencies
+# This repo assumes you have minwdl installed on HPC. If not, run the following commands
+pip3 install miniwdl miniwdl-slurm
+# add the path of miniwdl to your ~/.bashrc. 
+which mindwdl
+ls ~/.local/bin/miniwdl
