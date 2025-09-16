@@ -33,9 +33,10 @@ See [input.json](input.json) and [test_data/input.json](test_data/input.json) fo
 
 ## Dependencies
 - This repo assumes you have minwdl installed on HPC. If not, run the following commands
-```sh 
-pip3 install miniwdl miniwdl-slurm
-```
+
+    ```sh 
+    pip3 install miniwdl miniwdl-slurm
+    ```
 
 - add the path of miniwdl to your ~/.bashrc. 
 ```sh
