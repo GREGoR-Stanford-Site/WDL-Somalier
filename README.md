@@ -28,11 +28,14 @@ See [input.json](input.json) and [test_data/input.json](test_data/input.json) fo
 2. Run the workflow with miniwdl:
 
    ```sh
-   miniwdl run somalier.wdl -v -d work -i input.json --cfg miniwdl.cfg
+   miniwdl run somalier.wdl --verbose --dir work --input input.json --cfg miniwdl.cfg
+   miniwdl run somalier.wdl --help
 
 ## Dependencies
 - This repo assumes you have minwdl installed on HPC. If not, run the following commands
+```sh 
 pip3 install miniwdl miniwdl-slurm
 - add the path of miniwdl to your ~/.bashrc. 
+```sh
 which mindwdl
 ls ~/.local/bin/miniwdl
