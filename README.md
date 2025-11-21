@@ -43,3 +43,10 @@ pip3 install miniwdl miniwdl-slurm
 which mindwdl
 ls ~/.local/bin/miniwdl
 ```
+
+## Output
+- For outliers and potential sample swaps or mislabels, look into these files in output directories:
+`{output_prefix}.samples.tsv # creates a .ped like file with extra QC columns
+`{output_prefix}.pairs.tsv # shows IBS for all possible sample pairs
+`{output_prefix}.groups.tsv # shows pairs of samples above a certain relatedness
+`{output_prefix}.html # interactive html

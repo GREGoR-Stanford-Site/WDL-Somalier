@@ -8,21 +8,22 @@ workflow Somalier {
 
   scatter (ome in omeList) {
     Array[Array[File]] table = read_tsv(ome["toExtractList"])
-    Array[File] pastExtracted = read_lines(ome["extractedList"])
+    #Array[File] pastExtracted = read_lines(ome["extractedList"])
     scatter (row in table) {
         call ExtractSample { 
             input: 
                 sampleId=row[0], 
                 sites=sites, 
-                reference=reference, 
+                reference=reference,
                 sampleBam=row[1], 
                 sampleIndex=row[2]
         }
     }
+    # TODO: use min-ab parameter. It should be 0.2 for RNAseq and 0.3 for DNA (default)
     call RelateSamples {
         input:
             extractedFiles=ExtractSample.extractedFiles,
-            oldExtractedFiles=pastExtracted,
+            #oldExtractedFiles=pastExtracted,
             ome=ome["ome_name"],
             pedigree=pedigree
     }
