@@ -2,30 +2,37 @@ version 1.0
 
 workflow Somalier {
   Array[Map[String,String]] omeList
-  File sites
+  File DNA_sites
+  File RNA_sites
   File reference
   File? pedigree
 
-  scatter (ome in omeList) {
+ scatter (ome in omeList) {
     Array[Array[File]] table = read_tsv(ome["toExtractList"])
     #Array[File] pastExtracted = read_lines(ome["extractedList"])
+    
+    # Determine which sites file to use based on ome name
+    File sites_to_use = if (sub(ome["ome_name"], ".*RNA.*", "RNA") == "RNA") then RNA_sites else DNA_sites
+
+    Float min_AB_threshold = if (sub(ome["ome_name"], ".*RNA.*", "RNA") == "RNA") then 0.2 else 0.3
+    
     scatter (row in table) {
         call ExtractSample { 
             input: 
                 sampleId=row[0], 
-                sites=sites, 
+                sites=sites_to_use, 
                 reference=reference,
                 sampleBam=row[1], 
                 sampleIndex=row[2]
         }
     }
-    # TODO: use min-ab parameter. It should be 0.2 for RNAseq and 0.3 for DNA (default)
     call RelateSamples {
         input:
             extractedFiles=ExtractSample.extractedFiles,
             #oldExtractedFiles=pastExtracted,
             ome=ome["ome_name"],
-            pedigree=pedigree
+            pedigree=pedigree,
+            min_AB=min_AB_threshold
     }
     call CheckIdentical {
         input:
@@ -74,8 +81,9 @@ task RelateSamples {
     Array[File]? oldExtractedFiles
     File? pedigree
     String ome
+    Float min_AB # minimum allele balance
     command {
-        somalier relate -o ${ome} ${if defined(pedigree) then "-p ${pedigree}" else ""} ${sep=" " extractedFiles} ${if defined(oldExtractedFiles) then "sep=' ' oldExtractedFiles" else ""}
+        somalier relate -o ${ome} --min-ab ${min_AB} ${if defined(pedigree) then "-p ${pedigree}" else ""} ${sep=" " extractedFiles} ${if defined(oldExtractedFiles) then "sep=' ' oldExtractedFiles" else ""}
     }
     runtime {
         docker: "quay.io/biocontainers/somalier:0.2.19--h0c29559_0"
