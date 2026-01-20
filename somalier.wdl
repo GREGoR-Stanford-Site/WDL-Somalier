@@ -189,7 +189,7 @@ print('Sample Relatedness (Across All Omes)')
 for index, row in df.iterrows():
     if row['relatedness'] < ~{identityThreshold}:
         print(row['#sample_a']+' '+str(row['relatedness']))
-        " ~{sep=" " pairsFiles}
+" ~{sep=" " pairsFiles}
     >>>
     runtime {
         docker: "quay.io/biocontainers/pandas:1.5.2"
