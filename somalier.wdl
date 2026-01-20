@@ -1,10 +1,12 @@
 version 1.0
 
 workflow Somalier {
-  Array[Map[String,String]] omeList
-  File sites
-  File reference
-  File? pedigree
+  input {
+    Array[Map[String,String]] omeList
+    File sites
+    File reference
+    File? pedigree
+  }
 
   scatter (ome in omeList) {
     Array[Array[File]] table = read_tsv(ome["toExtractList"])
@@ -45,6 +47,13 @@ workflow Somalier {
     }
   }
 
+  # Check identity across all omes
+  call CheckIdenticalAcrossOmes {
+    input:
+      pairsFiles=RelateSamples.somalier_pairs,
+      identityThreshold=0.95
+  }
+
 }
 
 task ExtractSample {
@@ -69,10 +78,12 @@ task ExtractSample {
 }
 
 task RelateSamples {
-    Array[File] extractedFiles
-    Array[File]? oldExtractedFiles
-    File? pedigree
-    String ome
+    input {
+        Array[File] extractedFiles
+        Array[File]? oldExtractedFiles
+        File? pedigree
+        String ome
+    }
     command {
         somalier relate -o ${ome} ${if defined(pedigree) then "-p ${pedigree}" else ""} ${sep=" " extractedFiles} ${if defined(oldExtractedFiles) then "sep=' ' oldExtractedFiles" else ""}
     }
@@ -87,8 +98,10 @@ task RelateSamples {
 }
 
 task CheckIdentical {
-    File pairsFile
-    Float identityThreshold
+    input {
+        File pairsFile
+        Float identityThreshold
+    }
     command {
         python -c "
         import pandas as pd
@@ -109,7 +122,9 @@ task CheckIdentical {
 }
 
 task CheckSex {
-    File sampleFile
+    input {
+        File sampleFile
+    }
     command {
         python -c "
         import pandas as pd
@@ -131,8 +146,10 @@ task CheckSex {
 }
 
 task CheckRelationships {
-    File pairsFile
-    Float relatednessThreshold
+    input {
+        File pairsFile
+        Float relatednessThreshold
+    }
     command {
         python -c "
         import pandas as pd 
@@ -149,5 +166,38 @@ task CheckRelationships {
     }
     output {
         File RelationshipCheck = stdout()
+    }
+}
+
+task CheckIdenticalAcrossOmes {
+    input {
+        Array[File] pairsFiles
+        Float identityThreshold
+    }
+    command <<<
+        python -c "
+import pandas as pd
+import sys
+# Combine all pairs files from different omes
+dfs = []
+for f in sys.argv[1:]:
+    dfs.append(pd.read_csv(f, sep='\t'))
+if not dfs:
+    print('Sample Relatedness (Across All Omes)')
+    sys.exit(0)
+df = pd.concat(dfs, ignore_index=True)
+# Filter for self-comparisons (same sample)
+df = df[df['#sample_a'] == df['sample_b']]
+print('Sample Relatedness (Across All Omes)')
+for index, row in df.iterrows():
+    if row['relatedness'] < ~{identityThreshold}:
+        print(row['#sample_a']+' '+str(row['relatedness']))
+" ~{sep=" " pairsFiles}
+    >>>
+    runtime {
+        docker: "quay.io/biocontainers/pandas:1.5.2"
+    }
+    output {
+        File IdentityCheckAcrossOmes = stdout()
     }
 }
