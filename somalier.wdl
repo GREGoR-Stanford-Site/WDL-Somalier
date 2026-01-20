@@ -182,6 +182,9 @@ import sys
 dfs = []
 for f in sys.argv[1:]:
     dfs.append(pd.read_csv(f, sep='\t'))
+if not dfs:
+    print('Sample Relatedness (Across All Omes)')
+    sys.exit(0)
 df = pd.concat(dfs, ignore_index=True)
 # Filter for self-comparisons (same sample)
 df = df[df['#sample_a'] == df['sample_b']]
