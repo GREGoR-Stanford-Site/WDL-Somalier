@@ -174,22 +174,23 @@ task CheckIdenticalAcrossOmes {
         Array[File] pairsFiles
         Float identityThreshold
     }
-    command {
+    command <<<
         python -c "
-        import pandas as pd
-        # Combine all pairs files from different omes
-        dfs = []
-        for f in ['${sep="','" pairsFiles}']:
-            dfs.append(pd.read_csv(f, sep='\t'))
-        df = pd.concat(dfs, ignore_index=True)
-        # Filter for self-comparisons (same sample)
-        df = df[df['#sample_a'] == df['sample_b']]
-        print('Sample Relatedness (Across All Omes)')
-        for index, row in df.iterrows():
-            if row['relatedness'] < ${identityThreshold}:
-                print(row['#sample_a']+' '+str(row['relatedness']))
-        "
-    }
+import pandas as pd
+import sys
+# Combine all pairs files from different omes
+dfs = []
+for f in sys.argv[1:]:
+    dfs.append(pd.read_csv(f, sep='\t'))
+df = pd.concat(dfs, ignore_index=True)
+# Filter for self-comparisons (same sample)
+df = df[df['#sample_a'] == df['sample_b']]
+print('Sample Relatedness (Across All Omes)')
+for index, row in df.iterrows():
+    if row['relatedness'] < ~{identityThreshold}:
+        print(row['#sample_a']+' '+str(row['relatedness']))
+        " ~{sep=" " pairsFiles}
+    >>>
     runtime {
         docker: "quay.io/biocontainers/pandas:1.5.2"
     }
