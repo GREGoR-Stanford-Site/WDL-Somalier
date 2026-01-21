@@ -33,6 +33,7 @@ See [input.json](input.json) and [test_data/input.json](test_data/input.json) fo
 
 ## Dependencies
 - This repo assumes you have minwdl installed on HPC. If not, run the following commands
+Also, it requires python3.11 and above
 
 ```sh 
 pip3 install miniwdl miniwdl-slurm
@@ -47,6 +48,6 @@ ls ~/.local/bin/miniwdl
 ## Output
 - For outliers and potential sample swaps or mislabels, look into these files in output directories:
 `{output_prefix}.samples.tsv # creates a .ped like file with extra QC columns
-`{output_prefix}.pairs.tsv # shows IBS for all possible sample pairs
+`{output_prefix}.pairs.tsv` # shows IBS for all possible sample pairs
 `{output_prefix}.groups.tsv # shows pairs of samples above a certain relatedness
 `{output_prefix}.html # interactive html
