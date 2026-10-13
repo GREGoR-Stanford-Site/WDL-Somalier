@@ -4,9 +4,8 @@
     "Somalier.omeList": [
         {
             "ome_name":"Test",
-            "toExtractList":"/oak/stanford/groups/smontgom/jonnguye/repos/WDL-Somalier/test_data/short_bam_files.tsv",
-            "extractedList":"/oak/stanford/groups/smontgom/jonnguye/repos/WDL-Somalier/test_data/extractList.txt"
-        },
+            "toExtractList":"/oak/stanford/groups/smontgom/jonnguye/repos/WDL-Somalier/test_data/short_bam_files.tsv"
+        }
     ],
     "Somalier.pedigree":"/oak/stanford/groups/smontgom/jonnguye/repos/WDL-Somalier/sample.ped"
 }
